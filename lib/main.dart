@@ -66,13 +66,13 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
       'p': _password, // Replace 'your_password' with the actual password
     };
 
-    // Encode the form data as a JSON string
-    String jsonFormData = jsonEncode(formData);
+    // // Encode the form data as a JSON string
+    // String jsonFormData = jsonEncode(formData);
 
     // Send the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://192.168.4.1/wifisave'),
-      body: jsonFormData,
+      Uri.parse('http://192.168.4.1/wifisave?s=$_ssid&p=$_password'),
+      // body: jsonFormData,
       headers: {'Content-Type': 'application/json'},
     );
 
