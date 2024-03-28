@@ -61,10 +61,10 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
 
   void _sendSSIDAndPassword() async {
     // Create a map of the form fields and their values
-    Map<String, String> formData = {
-      's': _ssid, // Replace 'your_ssid' with the actual SSID
-      'p': _password, // Replace 'your_password' with the actual password
-    };
+    // Map<String, String> formData = {
+    //   's': _ssid, // Replace 'your_ssid' with the actual SSID
+    //   'p': _password, // Replace 'your_password' with the actual password
+    // };
 
     // // Encode the form data as a JSON string
     // String jsonFormData = jsonEncode(formData);
