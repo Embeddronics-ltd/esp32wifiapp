@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_iot_wifi/flutter_iot_wifi.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,45 +53,38 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
     }
 
     if (await _checkPermissions()) {
-      FlutterIotWifi.connect(_ssid, _password, prefix: true).then((value) => print("connect initiated: $value"));
+      try {
+        await WiFiForIoTPlugin.disconnect();
+        await WiFiForIoTPlugin.connect(_ssid,
+            password: _password, security: NetworkSecurity.WPA, joinOnce: true);
+        print("Connected to $_ssid");
+      } catch (e) {
+        print("Error connecting: $e");
+      }
     } else {
       print("Don't have permission");
     }
   }
 
   void _sendSSIDAndPassword() async {
-    // Create a map of the form fields and their values
-    // Map<String, String> formData = {
-    //   's': _ssid, // Replace 'your_ssid' with the actual SSID
-    //   'p': _password, // Replace 'your_password' with the actual password
-    // };
-
-    // // Encode the form data as a JSON string
-    // String jsonFormData = jsonEncode(formData);
-
-    // Send the HTTP POST request
     var response = await http.post(
       Uri.parse('http://192.168.4.1/wifisave?s=$_ssid&p=$_password'),
-      // body: jsonFormData,
       headers: {'Content-Type': 'application/json'},
     );
 
-  // Check the response status code
-  if (response.statusCode == 200) {
-    // Show a confirmation message to the user
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("SSID and password sent successfully"),
-      ),
-    );
-  } else {
-    // Show an error message to the user
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Error sending SSID and password"),
-      ),
-    );
-  }
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("SSID and password sent successfully"),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error sending SSID and password"),
+        ),
+      );
+    }
   }
 
   @override
