@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:wifi_iot/wifi_iot.dart';
@@ -46,17 +45,17 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
   }
 
   void _connect() async {
-    if (_ssid.isEmpty || _password.isEmpty) {
+    if (_ssid.isEmpty) {
       // Check if SSID or password is empty
-      print("SSID or password cannot be empty");
+      print("SSID cannot be empty");
       return;
     }
 
     if (await _checkPermissions()) {
       try {
-        await WiFiForIoTPlugin.disconnect();
+       await WiFiForIoTPlugin.removeWifiNetwork(_ssid);
         await WiFiForIoTPlugin.connect(_ssid,
-            password: _password, security: NetworkSecurity.WPA, joinOnce: true);
+            password: _password,security: NetworkSecurity.WPA, withInternet: false, joinOnce: true,timeoutInSeconds: 60);
         print("Connected to $_ssid");
       } catch (e) {
         print("Error connecting: $e");
@@ -67,6 +66,7 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
   }
 
   void _sendSSIDAndPassword() async {
+    WiFiForIoTPlugin.forceWifiUsage(true);
     var response = await http.post(
       Uri.parse('http://192.168.4.1/wifisave?s=$_ssid&p=$_password'),
       headers: {'Content-Type': 'application/json'},
