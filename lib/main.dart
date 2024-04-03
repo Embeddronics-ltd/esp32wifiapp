@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 void main() {
   runApp(const MyApp());
@@ -53,7 +55,7 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
 
     if (await _checkPermissions()) {
       try {
-       await WiFiForIoTPlugin.removeWifiNetwork(_ssid);
+      //  await WiFiForIoTPlugin.removeWifiNetwork(_ssid);
         await WiFiForIoTPlugin.connect(_ssid,
             password: _password,security: NetworkSecurity.WPA, withInternet: false, joinOnce: true,timeoutInSeconds: 60);
         print("Connected to $_ssid");
@@ -103,7 +105,7 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
                 _ssid = value; // Update SSID variable as user types
               });
             },
-            decoration: InputDecoration(labelText: 'SSID'),
+            decoration: const InputDecoration(labelText: 'SSID'),
           ),
           const SizedBox(height: 16),
           TextField(
@@ -113,7 +115,7 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
               });
             },
             obscureText: true,
-            decoration: InputDecoration(labelText: 'Password'),
+            decoration: const InputDecoration(labelText: 'Password'),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
