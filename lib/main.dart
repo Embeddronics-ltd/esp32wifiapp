@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:dio/dio.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -67,10 +67,12 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
 
   void _sendSSIDAndPassword() async {
     WiFiForIoTPlugin.forceWifiUsage(true);
-    var response = await http.post(
-      Uri.parse('http://192.168.4.1/wifisave?s=$_ssid&p=$_password'),
-      headers: {'Content-Type': 'application/json'},
-    );
+    // var response = await http.post(
+    //   Uri.parse('http://192.168.4.1/wifisave?s=$_ssid&p=$_password'),
+    //   headers: {'Content-Type': 'application/json'},
+    // );
+    final dio = Dio();
+        var response = await dio.post('http://192.168.4.1/wifisave?s=$_ssid&p=$_password');
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
