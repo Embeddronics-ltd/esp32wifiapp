@@ -68,13 +68,18 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
   }
 
   void _sendSSIDAndPassword() async {
-    WiFiForIoTPlugin.forceWifiUsage(true);
-    // var response = await http.post(
-    //   Uri.parse('http://192.168.4.1/wifisave?s=$_ssid&p=$_password'),
-    //   headers: {'Content-Type': 'application/json'},
-    // );
+  WiFiForIoTPlugin.forceWifiUsage(true);
+
+  // Encode the SSID and password values
+  String encodedSSID = Uri.encodeComponent(_ssid);
+  String encodedPassword = Uri.encodeComponent(_password);
+
+  // Construct the URL with encoded SSID and password
+  String url = 'http://192.168.4.1/wifisave?s=$encodedSSID&p=$encodedPassword';
+
+  try {
     final dio = Dio();
-        var response = await dio.post('http://192.168.4.1/wifisave?s=$_ssid&p=$_password');
+    var response = await dio.post(url);
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -89,7 +94,16 @@ class _AccessPointWidgetState extends State<AccessPointWidget> {
         ),
       );
     }
+  } catch (e) {
+    print("Error sending request: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Error sending request"),
+      ),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
